@@ -45,7 +45,7 @@ bool blocking_queue<T>::contains(T t)
 {
 	std::lock_guard<std::mutex> lg(m_);
 
-	for (auto it = queue_.begin(); it != queue_.end(); ++it)
+	for (auto it = queue_._Get_container().begin(); it != queue_._Get_container().end(); ++it)
 		if (*it == t) return true;
 
 	return false;
