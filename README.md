@@ -1,4 +1,4 @@
-# Cpp-Concurrent
+# C++ Concurrent
 My **C++** implementation of some **[Java.Util.Concurrent](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/package-summary.html)** classes
 
 **Implemented classes:**
