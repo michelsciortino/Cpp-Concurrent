@@ -7,3 +7,4 @@ My **C++** implementation of some **[Java.Util.Concurrent](https://docs.oracle.c
 * [cyclic_barrier](https://github.com/michelsciortino/Cpp-Concurrent/blob/master/src/cyclic_barrier.h)
 * [count_down_latch](https://github.com/michelsciortino/Cpp-Concurrent/blob/master/src/count_down_latch.h)
 * [phaser](https://github.com/michelsciortino/Cpp-Concurrent/blob/master/src/phaser.h)
+* [exchanger](https://github.com/michelsciortino/Cpp-Concurrent/blob/master/src/exchanger.h)
