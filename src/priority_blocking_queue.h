@@ -1,19 +1,25 @@
-﻿#pragma once
+#pragma once
 #include <queue>
 #include <mutex>
-#include <iostream>
 
-template <class T, class Container = std::vector<T>,class Compare = std::less<typename Container::value_type>> 
+template <class T, class Container = std::vector<T>, class Compare = std::less<typename Container::value_type>>
+class iterable_priority_queue : public std::priority_queue<T, Container, Compare>
+{
+public:
+	typename Container::iterator begin() { return std::priority_queue<T, Container, Compare>::c.begin(); }
+	typename Container::iterator end() { return std::priority_queue<T, Container, Compare>::c.end(); }
+};
+
+
+template <class T, class Container = std::vector<T>, class Compare = std::less<typename Container::value_type>>
 class priority_blocking_queue
 {
 
-private:
 	int max_size_;
 	int size_;
 	std::mutex m_;
 	std::condition_variable space_avaible, element_avaible;
-	std::priority_queue<T,Container,Compare> priority_queue_;
-
+	iterable_priority_queue<T, Container, Compare> priority_queue_;
 
 public:
 	priority_blocking_queue() : max_size_(INT_MAX), size_(0) {};
@@ -27,8 +33,8 @@ public:
 
 };
 
-template <class T, class Container,class Compare>
-bool priority_blocking_queue<T,Container,Compare>::add(T t)
+template <class T, class Container, class Compare>
+bool priority_blocking_queue<T, Container, Compare>::add(T t)
 {
 	std::lock_guard<std::mutex> lg(m_);
 
@@ -40,19 +46,18 @@ bool priority_blocking_queue<T,Container,Compare>::add(T t)
 	return true;
 }
 
-template <class T, class Container,class Compare>
-bool priority_blocking_queue<T,Container,Compare>::contains(T t)
+template <class T, class Container, class Compare>
+bool priority_blocking_queue<T, Container, Compare>::contains(T t)
 {
 	std::lock_guard<std::mutex> lg(m_);
-
 	for (auto it = priority_queue_.begin(); it != priority_queue_.end(); ++it)
 		if (*it == t) return true;
 
 	return false;
 }
 
-template <class T, class Container,class Compare>
-void priority_blocking_queue<T,Container,Compare>::put(T t)
+template <class T, class Container, class Compare>
+void priority_blocking_queue<T, Container, Compare>::put(T t)
 {
 	std::unique_lock<std::mutex> ul(m_);
 
@@ -64,8 +69,8 @@ void priority_blocking_queue<T,Container,Compare>::put(T t)
 	element_avaible.notify_one();
 }
 
-template <class T, class Container,class Compare>
-T priority_blocking_queue<T,Container,Compare>::take()
+template <class T, class Container, class Compare>
+T priority_blocking_queue<T, Container, Compare>::take()
 {
 	std::unique_lock<std::mutex> ul(m_);
 
@@ -79,8 +84,8 @@ T priority_blocking_queue<T,Container,Compare>::take()
 	return ret;
 }
 
-template <class T, class Container,class Compare>
-int priority_blocking_queue<T,Container,Compare>::size()
+template <class T, class Container, class Compare>
+int priority_blocking_queue<T, Container, Compare>::size()
 {
 	std::lock_guard<std::mutex> lg(m_);
 	return size_;
